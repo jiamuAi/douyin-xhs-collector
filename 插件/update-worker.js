@@ -26,7 +26,12 @@
             timer = setTimeout(() => reject(new Error("更新请求超时，请检查网络后重试。")), 180000);
             port.postMessage(message);
           });
-          if (result?.state === "error") throw new Error(result.message || "更新失败，请重试。");
+          if (result?.state === "error") {
+            if (!result.releaseAssets && result.message?.includes("GitHub 暂时限制了请求")) {
+              throw Object.assign(new Error("旧更新助手的 GitHub API 额度已用完。运行一次最新安装包里的「安装采集器」，再回到这里点更新。"), { setup: true });
+            }
+            throw new Error(result.message || "更新失败，请重试。");
+          }
           if (!result || !/^\d{1,5}\.\d{1,5}\.\d{1,5}$/.test(result.version)) throw new Error("更新助手返回的版本信息无效。");
           return result;
         } finally { clearTimeout(timer); receive = fail = undefined; }
@@ -77,9 +82,9 @@
       native = nativeSession();
       const remote = await native.send({ action: "check", version, installation: marker.installation || "" });
       const label = "v" + remote.version;
-      const setup = !marker.installation || !remote.integrated;
+      const setup = !marker.installation || !remote.releaseAssets;
       const sourceHint = !marker.installation ? " 当前加载的是源码或解压目录。"
-        : remote.integrated ? "" : " 运行一次新版安装包，可将旧更新助手迁入插件。";
+        : remote.releaseAssets ? "" : " 运行一次最新安装包里的「安装采集器」，可启用 GitHub Releases 直链更新。";
       switch (remote.state) {
         case "current": return await report({ setup, text: "已是最新版本 " + label + "。" + sourceHint });
         case "ahead": return await report({ setup, text: "当前试用版 v" + version + "，高于 GitHub 公开版 " + label + "。" + sourceHint });

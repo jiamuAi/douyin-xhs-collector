@@ -16,10 +16,11 @@ type request struct {
 	Installation string `json:"installation"`
 }
 type response struct {
-	Integrated bool   `json:"integrated,omitempty"`
-	State      string `json:"state"`
-	Version    string `json:"version,omitempty"`
-	Message    string `json:"message,omitempty"`
+	Integrated    bool   `json:"integrated,omitempty"`
+	ReleaseAssets bool   `json:"releaseAssets,omitempty"`
+	State         string `json:"state"`
+	Version       string `json:"version,omitempty"`
+	Message       string `json:"message,omitempty"`
 }
 
 func receive(in io.Reader) (msg request, err error) {
@@ -39,6 +40,7 @@ func receive(in io.Reader) (msg request, err error) {
 }
 func send(out io.Writer, msg response) error {
 	msg.Integrated = true
+	msg.ReleaseAssets = true
 	b, err := json.Marshal(msg)
 	if err != nil {
 		return err

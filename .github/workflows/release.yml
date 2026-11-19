@@ -1,0 +1,62 @@
+name: Publish extension release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: collector-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      UPDATER: 插件/组件/更新助手/源码
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check the extension version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/release.py plan
+      - if: steps.version.outputs.publish == 'true'
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - if: steps.version.outputs.publish == 'true'
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: '1.27.4'
+          cache: false
+      - name: Test the extension and native helper
+        if: steps.version.outputs.publish == 'true'
+        run: |
+          node --test 测试/*.test.mjs
+          (cd "$UPDATER" && go test ./...)
+      - name: Build the update feed and installers
+        if: steps.version.outputs.publish == 'true'
+        run: |
+          python3 "$UPDATER/package.py" update dist
+          for platform in darwin windows linux; do
+            for arch in arm64 amd64; do
+              python3 "$UPDATER/package.py" "$platform" "$arch" dist
+            done
+          done
+      - name: Verify all assets and publish the release
+        if: steps.version.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/release.py publish dist

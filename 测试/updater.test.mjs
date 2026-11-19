@@ -8,7 +8,7 @@ const id = "npnmgnkhnkjhgbccjajcfbbhppkjgpke";
 const origin = "chrome-extension://" + id;
 const popup = { id, url: origin + "/popup.html" };
 
-function harness({ active = [], installedVersion = "1.6.1", loadedFiles = "1.6.1", closeAt, holdExport = false, checkState = "available", integrated } = {}) {
+function harness({ active = [], installedVersion = "1.6.1", loadedFiles = "1.6.1", closeAt, holdExport = false, checkState = "available", releaseAssets, message } = {}) {
   const session = {}, local = {}, actions = [];
   const area = data => ({ set: async values => Object.assign(data, values), get: async () => data });
   let listener, replyToPort, disconnected, reloaded = 0, opened = 0;
@@ -26,7 +26,7 @@ function harness({ active = [], installedVersion = "1.6.1", loadedFiles = "1.6.1
             if (m.action === closeAt) { disconnected(); return; }
             const state = { check: checkState, prepare: "ready", install: "installed" }[m.action];
             const version = state === "current" ? "1.6.0" : m.action === "install" ? installedVersion : "1.6.1";
-            replyToPort({ state, version, integrated });
+            replyToPort({ state, version, integrated: true, releaseAssets, message });
           });
         }
       };
@@ -74,14 +74,22 @@ test("a copied install directory points to the managed folder without reloading 
   assert.equal(t.reloaded, 0); assert.equal(t.session.collectorUpdate.setup, true);
 });
 
-test("a managed install offers migration only while it still uses the v1.6.0 helper", async () => {
-  for (const integrated of [undefined, true]) {
-    const t = harness({ checkState: "current", integrated });
+test("a managed install offers migration when its helper still uses the REST API", async () => {
+  for (const releaseAssets of [undefined, true]) {
+    const t = harness({ checkState: "current", releaseAssets });
     await t.request();
     assert.deepEqual(t.actions, ["check"]);
-    assert.equal(t.session.collectorUpdate.setup, !integrated);
-    assert.equal(t.session.collectorUpdate.text.includes("迁入插件"), !integrated);
+    assert.equal(t.session.collectorUpdate.setup, !releaseAssets);
+    assert.equal(t.session.collectorUpdate.text.includes("直链更新"), !releaseAssets);
   }
+});
+
+test("an old rate-limited helper shows the one-time installer path", async () => {
+  const t = harness({ checkState: "error", message: "GitHub 暂时限制了请求，请稍后重试。" });
+  await t.request();
+  assert.equal(t.session.collectorUpdate.setup, true);
+  assert.match(t.session.collectorUpdate.text, /安装采集器/);
+  assert.equal(t.reloaded, 0);
 });
 
 test("web content, other extensions and ordinary tabs cannot start a native update", async () => {
