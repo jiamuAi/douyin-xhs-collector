@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>导出到飞书 · 抖音小红书内容采集器</title>
+  <link rel="stylesheet" href="feishu.css">
+  <script src="export.js" defer></script><script src="feishu.js" defer></script>
+  <script src="vendor/qrcode.js" defer></script><script src="feishu-auth.js" defer></script>
+  <script src="feishu-page.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <img src="icons/128.png" width="42" height="42" alt="">
+      <div><h1>导出到飞书多维表格</h1><p id="summary" class="summary">正在读取采集结果…</p></div>
+    </header>
+    <p id="loadError" class="error" role="alert" hidden></p>
+    <ol class="steps" role="list">
+      <li class="step" id="accountStep">
+        <span class="number" aria-hidden="true">1</span>
+        <section aria-labelledby="accountTitle">
+          <div class="heading"><h2 id="accountTitle">连接飞书账号</h2><span id="connection" class="badge" hidden></span></div>
+          <p id="connectHelp">首次使用，请用飞书扫码，选择或创建应用，再确认授权。</p>
+          <div class="actions"><button id="connect" class="primary" type="button" disabled>连接飞书</button><button id="cancelAuth" type="button" hidden>取消连接</button></div>
+          <div id="authPanel" hidden aria-live="polite">
+            <h3 id="authHeading"></h3><p id="authHint"></p>
+            <img id="authQr" width="210" height="210" alt="使用飞书扫描二维码">
+            <a id="authLink" target="_blank" rel="noopener noreferrer">在电脑上打开飞书 ↗</a>
+            <p id="authCode" class="muted"></p><p id="authExpiry" class="muted"></p>
+          </div>
+          <p id="authMessage" role="status" hidden></p>
+          <details id="manual"><summary>账号与高级设置</summary>
+            <div class="actions"><button id="reconnect" type="button" hidden>重新连接飞书</button><button id="disconnect" type="button" hidden>清除本机连接</button><button id="configureApp" type="button" hidden>扫码补充应用权限</button></div>
+            <p>需要手动配置时，请填写支持设备授权的自建应用，并开通 bitable:app 用户身份权限。</p>
+            <label for="appId">App ID</label><input id="appId" type="text" autocomplete="off" spellcheck="false">
+            <label for="appSecret">App Secret</label><input id="appSecret" type="password" autocomplete="off" spellcheck="false">
+            <button id="manualConnect" type="button">使用此应用并授权</button>
+          </details>
+        </section>
+      </li>
+      <li class="step" id="targetStep">
+        <span class="number" aria-hidden="true">2</span>
+        <section aria-labelledby="targetHeading">
+          <h2 id="targetHeading">选择保存位置</h2>
+          <fieldset class="modes">
+            <legend class="sr-only">保存到哪份飞书多维表格</legend>
+            <label><input id="newTable" type="radio" name="destination" checked>新建表格</label>
+            <label><input id="existing" type="radio" name="destination">写入已有表格</label>
+          </fieldset>
+          <div id="newFields"><label for="name">新表格名称<span id="nameHint" class="hint">已自动填写，可修改</span></label><input id="name" type="text" maxlength="100"></div>
+          <div id="existingFields" hidden><label for="target">已有多维表格的链接</label><input id="target" type="url" placeholder="粘贴飞书多维表格链接" autocomplete="off" disabled>
+            <p class="hint">链接可指定内容写入哪张数据表。已有记录按 ID 跳过。</p>
+          </div>
+        </section>
+      </li>
+      <li class="step" id="exportStep">
+        <span class="number" aria-hidden="true">3</span>
+        <section aria-labelledby="exportTitle">
+          <h2 id="exportTitle">导出采集结果</h2>
+          <p id="tableHint">全部写完后，会自动打开飞书表格。</p>
+          <div class="actions"><button id="start" class="primary" type="button" disabled>新建表格并导出</button><button id="stop" type="button" hidden>停止导出</button><a id="open" target="_blank" rel="noopener noreferrer" hidden>打开飞书表格 ↗</a></div>
+          <p id="readyHint" class="muted">请先完成第 1 步。</p>
+          <p id="status" role="status"></p>
+          <progress id="progress" aria-label="导出进度" value="0" max="1" hidden></progress>
+          <p id="counts" class="muted" aria-live="polite"></p>
+          <div id="recover" hidden><label for="recoverUrl">如已创建新表格，请粘贴它的链接以继续导出</label><input id="recoverUrl" type="url" placeholder="粘贴已创建的多维表格链接"><button id="recoverButton" type="button">继续到已有表格</button></div>
+        </section>
+      </li>
+    </ol>
+  </main>
+</body>
+</html>

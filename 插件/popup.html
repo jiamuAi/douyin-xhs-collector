@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>抖音小红书内容采集器</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="export.js" defer></script>
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <header>
+    <img class="mark" src="icons/128.png" width="36" height="36" alt="">
+    <div class="identity"><h1><span class="douyin">抖音</span><span class="xiaohongshu">小红书</span>内容采集器</h1><p id="context">正在读取当前页面…</p></div>
+    <button id="rescan" class="quiet" disabled>重新扫描</button>
+  </header>
+  <main>
+    <div id="status" role="status" aria-live="polite">正在查找内容卡片…</div>
+    <div id="automation" hidden>
+      <div class="scroll-controls">
+        <label for="direction">滚动方向</label>
+        <select id="direction">
+          <option value="down">向下采集</option>
+          <option value="up">向上采集</option>
+          <option value="fromTop">先向上，再向下</option>
+        </select>
+        <button id="toggleScroll" type="button">开始自动采集</button>
+      </div>
+      <p id="runStatus" role="status" aria-live="polite"></p>
+    </div>
+    <div id="results" hidden>
+      <div class="stats">
+        <div><strong id="total">0</strong><span id="itemCountLabel">条已选内容</span></div>
+        <div><strong id="authors">0</strong><span>位博主</span></div>
+      </div>
+      <div class="preview">
+        <div class="preview-head"><h2 id="previewHeading">内容预览</h2><span>点赞</span></div>
+        <ol id="rows" aria-label="已采集的内容"></ol>
+      </div>
+      <div class="exports">
+        <button id="feishu" class="primary" disabled>导出到飞书多维表格</button>
+        <button id="excel" disabled>导出 Excel</button>
+        <button id="json" disabled>导出 JSON</button>
+      </div>
+      <button id="reset" class="text-button" type="button">仅保留当前这批</button>
+    </div>
+  </main>
+</body>
+</html>

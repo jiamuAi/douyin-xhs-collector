@@ -1,0 +1,78 @@
+:root {
+  color-scheme: light;
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #242c3b;
+  background: #f5f6f8;
+  --blue: #315bb8;
+  --muted: #546378;
+  --line: #d9dfe8;
+}
+* { box-sizing: border-box; }
+body, h1, h2, h3, p, .steps { margin: 0; }
+main { max-width: 760px; padding: 28px 20px; margin: auto; }
+header { display: flex; align-items: center; gap: 14px; margin: 0 0 20px; }
+h1 { font-size: 26px; letter-spacing: -.6px; }
+h2 { font-size: 18px; }
+h3 { font-size: 15px; margin-bottom: 4px; }
+.summary { margin-top: 3px; color: var(--muted); }
+.steps { list-style: none; padding: 0; display: grid; gap: 10px; }
+.step {
+  display: grid; grid-template-columns: 34px minmax(0,1fr); align-items: start; gap: 14px;
+  padding: 17px 22px; background: white; border: 1px solid var(--line); border-radius: 14px;
+}
+.number {
+  display: grid; place-items: center; width: 34px; height: 34px; line-height: 1;
+  font-size: 21px; font-weight: 750; font-variant-numeric: tabular-nums;
+  border-radius: 10px; background: #e9eef9; color: #314c84;
+}
+.step.current { border-color: #93ade4; }
+.step.current .number { color: white; background: var(--blue); }
+.step.done .number, .badge { color: #176348; background: #e5f4eb; }
+.heading { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+section { min-width: 0; padding-top: 2px; }
+section > p, #authHint { margin-top: 5px; color: var(--muted); overflow-wrap: anywhere; }
+.badge { max-width: 100%; overflow-wrap: anywhere; padding: 2px 9px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+label { display: block; margin: 9px 0 4px; font-weight: 550; }
+.hint, .muted, #status, #authMessage { color: var(--muted); font-size: 13px; }
+label .hint { margin-left: 8px; font-weight: 400; }
+input[type=text], input[type=url], input[type=password] {
+  display: block; width: 100%; padding: 8px 11px; border: 1px solid #bcc6d5;
+  border-radius: 7px; background: #fff; font: inherit; color: inherit;
+}
+input:disabled { background: #f4f5f7; color: #536176; }
+.modes { margin: 8px 0 0; padding: 0; border: 0; display: flex; flex-wrap: wrap; gap: 5px 20px; }
+.modes label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; margin: 0; padding: 3px 0; font-weight: 500; }
+.modes input { accent-color: var(--blue); margin: 0; width: 16px; height: 16px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.actions:has(> :not([hidden])) { margin-top: 11px; }
+button, a.primary {
+  border: 1px solid #c1ccdc; border-radius: 8px; background: #fff; padding: 8px 15px;
+  font: inherit; font-weight: 600; cursor: pointer; color: #304e82;
+}
+button:hover:enabled { background: #f2f5fb; }
+button.primary, a.primary { background: var(--blue); color: white; border-color: var(--blue); }
+button.primary:hover:enabled, a.primary:hover { background: #254a99; }
+button:disabled { color: #64738a; background: #eef1f5; border-color: #dde3e9; cursor: default; }
+a { color: var(--blue); text-underline-offset: 3px; }
+a.primary { display: inline-block; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+details { margin-top: 8px; }
+summary { width: fit-content; cursor: pointer; font-size: 13px; color: var(--muted); }
+details[open], #authPanel, #recover { background: #f5f7fa; padding: 12px; border-radius: 8px; }
+details[open] p, #existingFields p { margin-top: 6px; }
+#manualConnect, #recover button, #recover, #authPanel { margin-top: 10px; }
+#authQr { display: block; max-width: 100%; height: auto; margin: 10px 0; image-rendering: pixelated; }
+#status:not(:empty), #authMessage:not(:empty) { margin-top: 8px; }
+#counts:empty, #status:empty { display: none; }
+progress { display: block; width: 100%; height: 8px; margin-top: 10px; accent-color: var(--blue); }
+#loadError { margin: 0 0 12px; }
+.error, #status.error, #authMessage.error { color: #a52b38; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }
+@media (max-width: 540px) {
+  main { padding: 18px 12px; }
+  header { gap: 10px; margin-bottom: 14px; }
+  h1 { font-size: 21px; } h2 { font-size: 17px; }
+  .step { grid-template-columns: 30px minmax(0,1fr); gap: 10px; padding: 14px 12px; }
+  .number { width: 30px; height: 30px; font-size: 19px; }
+}

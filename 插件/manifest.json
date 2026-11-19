@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "抖音小红书内容采集器",
+  "short_name": "抖音小红书内容采集器",
+  "version": "1.5.0",
+  "minimum_chrome_version": "106",
+  "description": "采集小红书笔记和抖音作品，支持自动滚动、随时停止，导出到飞书多维表格、Excel 或 JSON。",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://open.feishu.cn/*",
+    "https://accounts.feishu.cn/*"
+  ],
+  "background": {
+    "service_worker": "worker.js"
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "action": {
+    "default_title": "抖音小红书内容采集器 · 采集当前页面",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvG4lnDkOeAv+fJmivClBk2a4OGpoUBcIW7PUSEZfP/O92/3WaU9ZriBba395oAMecywIPAvuOKVqKK0SZVGMpIwh8EkPF792u8p60kQEj4DEE/aINOzJf+jGxbM3KzCusNqGrS6AiAT0xZ3a3mmaomgE2y2PIJuHMMpdZJqZ7ArAcpgOFAgsu7ag7dH55DThGqAROgM5QMVh0yqQMgKU36SAQPKMf98L9Q84LrPdhB+DzolQ5vqsc7Tpt7++hyqgYrhfcNaLVhZSL3yZ92WBKjZsNhphnUxqAAKK7xT4A5hlsTzhys5gfpN+s6j8E6RBxIExsSj9piZE+NYsIBi2TwIDAQAB"
+}
