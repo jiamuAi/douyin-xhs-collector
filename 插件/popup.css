@@ -51,3 +51,11 @@ li { display: flex; gap: 10px; align-items: center; padding: 8px 1px; border-top
 .text-button { float: right; font-size: 10px; line-height: 1.4; margin-top: 10px; padding: 0; border: 0; background: transparent; color: #785154; font-weight: 500; }
 main::after { content: ""; display: block; clear: both; }
 [hidden] { display: none !important; }
+.updates { position: sticky; bottom: 0; z-index: 1; background: #f9f8f6; padding: 9px 20px 10px; border-top: 1px solid #e6e3df; color: #6d6864; font-size: 11px; }
+.update-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#pluginVersion { font-variant-numeric: tabular-nums; }
+#checkUpdate { padding: 4px 0 4px 8px; border: 0; background: none; color: #83363e; font-size: 12px; }
+#checkUpdate:hover:enabled { text-decoration: underline; text-underline-offset: 3px; }
+#updateStatus:not(:empty), #updateHelp { margin-top: 6px; line-height: 1.6; }
+#updateStatus.error { color: #91363b; }
+#updateHelp summary { cursor: pointer; color: #83363e; }

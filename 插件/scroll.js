@@ -161,6 +161,9 @@
     manualRun = null;
     finish("");
   }
+  globalThis.chrome?.runtime?.onMessage?.addListener((message, sender, reply) => {
+    if (message?.type === "collector-update-scroll" && sender.id === chrome.runtime.id) reply({ active: !!run });
+  });
   window.addEventListener("pagehide", clear);
   globalThis.xhsPageScroll = {
     scan, start, stop, clear,

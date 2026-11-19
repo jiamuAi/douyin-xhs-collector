@@ -178,7 +178,8 @@ async function download(format) {
   finally { toggleBusy(false); poll(); }
 }
 elements.rescan.addEventListener("click", () => scan());
-elements.toggleScroll.addEventListener("click", toggleScroll);
+elements.toggleScroll.addEventListener("click", () => navigator.locks.request("collector-install",
+  { mode: "shared", ifAvailable: true }, lock => lock ? toggleScroll() : status("插件正在更新，请稍后再开始采集。", true)));
 elements.reset.addEventListener("click", () => scan(true));
 elements.excel.addEventListener("click", () => download("xlsx"));
 elements.json.addEventListener("click", () => download("json"));

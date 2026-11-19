@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="popup.css">
   <script src="export.js" defer></script>
   <script src="popup.js" defer></script>
+  <script src="update-popup.js" defer></script>
 </head>
 <body>
   <header>
@@ -45,5 +46,13 @@
       <button id="reset" class="text-button" type="button">仅保留当前这批</button>
     </div>
   </main>
+  <footer class="updates">
+    <div class="update-line"><span id="pluginVersion"></span><button type="button" id="checkUpdate">检查并更新</button></div>
+    <p id="updateStatus" role="status" aria-live="polite"></p>
+    <details id="updateHelp" hidden>
+      <summary>如何启用一键更新</summary>
+      <p>解压对应系统的安装包，运行「安装采集器」。再到 Chrome 扩展程序页点「加载已解压的扩展程序」，选择安装工具显示的文件夹。</p>
+    </details>
+  </footer>
 </body>
 </html>

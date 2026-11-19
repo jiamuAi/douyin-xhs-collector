@@ -1,4 +1,5 @@
 "use strict";
+importScripts("update-worker.js");
 
 // Export snapshots are accessible only to trusted extension pages, never to page/content scripts.
 chrome.storage.local.setAccessLevel({ accessLevel: "TRUSTED_CONTEXTS" });
@@ -6,7 +7,8 @@ chrome.storage.session.setAccessLevel({ accessLevel: "TRUSTED_CONTEXTS" });
 chrome.runtime.onMessage.addListener((message, sender, reply) => {
   if (message?.type !== "feishu-open" || sender.id !== chrome.runtime.id || sender.tab ||
     sender.url !== chrome.runtime.getURL("popup.html")) return;
-  (async () => {
+  navigator.locks.request("collector-install", { mode: "shared", ifAvailable: true }, async lock => {
+    if (!lock) throw new Error("插件正在更新，请更新后再打开导出。");
     if (!Array.isArray(message.payload?.notes) || !Array.isArray(message.payload?.authors)) throw new Error("采集数据不完整。");
     const jobs = await chrome.storage.session.get(null);
     for (const [key, item] of Object.entries(jobs)) {
@@ -17,7 +19,7 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
     try { await chrome.tabs.create({ url: chrome.runtime.getURL("feishu.html") + "?job=" + id }); }
     catch (error) { await chrome.storage.session.remove("feishu-job-" + id); throw error; }
     reply({ ok: true });
-  })().catch(error => reply({ error: error.message.includes("QUOTA") ? "导出缓存已满，请关闭 Chrome 后重新采集，或先导出 Excel。" : error.message }));
+  }).catch(error => reply({ error: error.message.includes("QUOTA") ? "导出缓存已满，请关闭 Chrome 后重新采集，或先导出 Excel。" : error.message }));
   return true;
 });
 

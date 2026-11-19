@@ -21,3 +21,5 @@ node_modules/
 /飞书接入与发布.md
 /测试/*
 !/测试/*.test.mjs
+
+/dist/
