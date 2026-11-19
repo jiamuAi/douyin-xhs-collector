@@ -185,6 +185,9 @@ func filesFor(r release) (map[string]string, error) {
 		if !safeName(name) || paths[key] {
 			return nil, errors.New("发布目录含不兼容的文件名。")
 		}
+		if localEntry(name) {
+			continue
+		}
 		paths[key] = true
 		if entry.Mode == "040000" && entry.Type == "tree" {
 			continue
@@ -233,6 +236,9 @@ func extract(b []byte, r release, files map[string]string, dir string) error {
 	for _, f := range z.File {
 		name, ok := strings.CutPrefix(f.Name, prefix)
 		if !ok || name == "" || strings.HasSuffix(name, "/") {
+			continue
+		}
+		if safeName(name) && localEntry(name) {
 			continue
 		}
 		want, known := files[name]

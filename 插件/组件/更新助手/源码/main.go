@@ -16,9 +16,10 @@ type request struct {
 	Installation string `json:"installation"`
 }
 type response struct {
-	State   string `json:"state"`
-	Version string `json:"version,omitempty"`
-	Message string `json:"message,omitempty"`
+	Integrated bool   `json:"integrated,omitempty"`
+	State      string `json:"state"`
+	Version    string `json:"version,omitempty"`
+	Message    string `json:"message,omitempty"`
 }
 
 func receive(in io.Reader) (msg request, err error) {
@@ -37,6 +38,7 @@ func receive(in io.Reader) (msg request, err error) {
 	return
 }
 func send(out io.Writer, msg response) error {
+	msg.Integrated = true
 	b, err := json.Marshal(msg)
 	if err != nil {
 		return err
@@ -72,11 +74,12 @@ func session(in io.Reader, out io.Writer, root string) error {
 		return err
 	}
 	defer unlock()
-	if err = recoverSwap(root); err != nil {
+	if err = recoverInstall(root); err != nil {
 		return err
 	}
 	installed := m.Installation != "" && readMarker(dst) == m.Installation
 	if installed {
+		cleanHelpers(filepath.Join(root, "bin"), "")
 		disk, err := manifestVersion(dst)
 		if err != nil {
 			return err
@@ -134,7 +137,13 @@ func main() {
 		os.Exit(1)
 	}
 	if len(os.Args) >= 2 && os.Args[1] == origin {
-		err = session(os.Stdin, os.Stdout, filepath.Dir(filepath.Dir(exe)))
+		var plugin string
+		plugin, err = pluginForHelper(exe)
+		if err == nil && filepath.Base(plugin) == folder {
+			err = session(os.Stdin, os.Stdout, filepath.Dir(plugin))
+		} else {
+			err = errors.New("更新助手未从已安装的插件目录启动。")
+		}
 		if err != nil && !errors.Is(err, io.EOF) {
 			var pathErr *os.PathError
 			message := err.Error()
@@ -151,7 +160,16 @@ func main() {
 	}
 	root, registration, err := userPaths()
 	if err == nil {
-		err = install(exe, filepath.Join(filepath.Dir(exe), folder), root, registration)
+		var src string
+		src, err = pluginForHelper(exe)
+		if err == nil {
+			var existing bool
+			existing, err = install(exe, src, root, registration, register)
+			if err == nil && existing {
+				fmt.Println("更新助手已就位。请打开 Chrome 中原来的采集器，点「检查并更新」。")
+				return
+			}
+		}
 	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "安装失败。", err)

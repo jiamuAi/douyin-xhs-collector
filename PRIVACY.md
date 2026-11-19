@@ -41,4 +41,4 @@
 
 要移除本机飞书连接，在导出页第 1 步展开**账号与高级设置 → 清除本机连接**。要撤销服务器端授权，请同时在飞书管理已授权应用。要删除导出结果，请分别删除本机文件或飞书内的表格、记录。移除 Chrome 扩展会清除它的本地扩展存储。向维护者反馈问题时，请使用已替换真实数据的示例。[安全问题反馈方式](SECURITY.md)
 
-移除更新助手时，可先关闭更新操作，删除当前用户的 `DouyinXhsCollector` 安装目录。macOS 和 Linux 可在 Chrome 用户配置的 `NativeMessagingHosts` 目录删除 `ai.jiamu.dy_xhs_collector.json`。Windows 对应的注册项是 `HKCU\Software\Google\Chrome\NativeMessagingHosts\ai.jiamu.dy_xhs_collector`。
+内置助手位于已安装插件的 `组件/更新助手/`。安装程序会在本机迁移旧助手。需要移除整个采集器时，可先关闭更新操作，删除当前用户的 `DouyinXhsCollector` 安装目录。macOS 和 Linux 可在 Chrome 用户配置的 `NativeMessagingHosts` 目录删除 `ai.jiamu.dy_xhs_collector.json`。Windows 对应的注册项是 `HKCU\Software\Google\Chrome\NativeMessagingHosts\ai.jiamu.dy_xhs_collector`。

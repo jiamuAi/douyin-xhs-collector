@@ -77,10 +77,12 @@
       native = nativeSession();
       const remote = await native.send({ action: "check", version, installation: marker.installation || "" });
       const label = "v" + remote.version;
-      const sourceHint = marker.installation ? "" : " 当前加载的是源码目录。";
+      const setup = !marker.installation || !remote.integrated;
+      const sourceHint = !marker.installation ? " 当前加载的是源码或解压目录。"
+        : remote.integrated ? "" : " 运行一次新版安装包，可将旧更新助手迁入插件。";
       switch (remote.state) {
-        case "current": return await report({ setup: !marker.installation, text: "已是最新版本 " + label + "。" + sourceHint });
-        case "ahead": return await report({ setup: !marker.installation, text: "当前试用版 v" + version + "，高于 GitHub 公开版 " + label + "。" + sourceHint });
+        case "current": return await report({ setup, text: "已是最新版本 " + label + "。" + sourceHint });
+        case "ahead": return await report({ setup, text: "当前试用版 v" + version + "，高于 GitHub 公开版 " + label + "。" + sourceHint });
         case "setup": return await report({ setup: true, text: "发现新版 " + label + "。请先加载安装工具显示的插件目录。" });
         case "reload": return await whileIdle(() => reload(remote.version));
         case "available": break;

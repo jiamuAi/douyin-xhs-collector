@@ -30,7 +30,7 @@ func TestStableVersions(t *testing.T) {
 }
 func manifestAt(t *testing.T, v string) []byte {
 	t.Helper()
-	b, err := os.ReadFile(filepath.Join("..", "插件", "manifest.json"))
+	b, err := os.ReadFile(filepath.Join("..", "..", "..", "manifest.json"))
 	if err != nil {
 		t.Fatal(err)
 	}

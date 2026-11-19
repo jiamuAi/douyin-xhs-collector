@@ -4,7 +4,7 @@
 
 | 组件 | 用途与分发方式 | 随仓库提供的许可 |
 | --- | --- | --- |
-| Go 运行时、标准库及其随附组件 | 安装包内的本机更新助手使用 Go 编译。 | 二进制安装包的 `licenses/` 目录随附 Go 和随工具链分发的 `golang.org/x` 组件许可。[Go 许可原文](https://go.dev/LICENSE) |
+| Go 运行时、标准库及其随附组件 | 安装包内的本机更新助手使用 Go 编译。 | 安装包的 `说明/licenses/` 目录随附 Go 和随工具链分发的 `golang.org/x` 组件许可。[Go 许可原文](https://go.dev/LICENSE) |
 | ExcelJS 4.4.0 | 本机生成 .xlsx。使用 npm 发行包中的 `dist/exceljs.min.js`，随扩展分发，点击导出 Excel 时加载。 | [ExcelJS 的 MIT 许可](插件/vendor/LICENSE-exceljs.txt) · [浏览器包中各组件的版权与许可声明](插件/vendor/exceljs-bundled-NOTICES.txt) |
 | qrcode-generator 1.4.4 | 在本机生成飞书授权二维码。使用 npm 发行包中的 `qrcode.js`。 | [Kazuhiko Arase 的 MIT 许可](插件/vendor/qrcode-LICENSE.txt) |
 | Lark/Feishu 官方 CLI、Node SDK | 飞书设备授权、应用配置与权限预填的实现参考。运行扩展无须安装这些工具。 | [CLI 声明](插件/vendor/larksuite-cli-LICENSE.txt) · [Node SDK 声明](插件/vendor/larksuite-node-sdk-LICENSE.txt) |

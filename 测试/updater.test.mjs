@@ -8,7 +8,7 @@ const id = "npnmgnkhnkjhgbccjajcfbbhppkjgpke";
 const origin = "chrome-extension://" + id;
 const popup = { id, url: origin + "/popup.html" };
 
-function harness({ active = [], installedVersion = "1.6.1", loadedFiles = "1.6.1", closeAt, holdExport = false } = {}) {
+function harness({ active = [], installedVersion = "1.6.1", loadedFiles = "1.6.1", closeAt, holdExport = false, checkState = "available", integrated } = {}) {
   const session = {}, local = {}, actions = [];
   const area = data => ({ set: async values => Object.assign(data, values), get: async () => data });
   let listener, replyToPort, disconnected, reloaded = 0, opened = 0;
@@ -24,9 +24,9 @@ function harness({ active = [], installedVersion = "1.6.1", loadedFiles = "1.6.1
           actions.push(m.action);
           queueMicrotask(() => {
             if (m.action === closeAt) { disconnected(); return; }
-            const state = { check: "available", prepare: "ready", install: "installed" }[m.action];
-            const version = m.action === "install" ? installedVersion : "1.6.1";
-            replyToPort({ state, version });
+            const state = { check: checkState, prepare: "ready", install: "installed" }[m.action];
+            const version = state === "current" ? "1.6.0" : m.action === "install" ? installedVersion : "1.6.1";
+            replyToPort({ state, version, integrated });
           });
         }
       };
@@ -72,6 +72,16 @@ test("an interrupted download or unexpected installed version never triggers rel
 test("a copied install directory points to the managed folder without reloading the old copy", async () => {
   const t = harness({ loadedFiles: "1.6.0" }); await t.request();
   assert.equal(t.reloaded, 0); assert.equal(t.session.collectorUpdate.setup, true);
+});
+
+test("a managed install offers migration only while it still uses the v1.6.0 helper", async () => {
+  for (const integrated of [undefined, true]) {
+    const t = harness({ checkState: "current", integrated });
+    await t.request();
+    assert.deepEqual(t.actions, ["check"]);
+    assert.equal(t.session.collectorUpdate.setup, !integrated);
+    assert.equal(t.session.collectorUpdate.text.includes("迁入插件"), !integrated);
+  }
 });
 
 test("web content, other extensions and ordinary tabs cannot start a native update", async () => {
