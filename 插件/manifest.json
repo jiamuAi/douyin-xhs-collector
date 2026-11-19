@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "抖音小红书内容采集器",
   "short_name": "抖音小红书内容采集器",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "minimum_chrome_version": "106",
   "description": "采集小红书笔记和抖音作品，支持自动滚动、随时停止，导出到飞书多维表格、Excel 或 JSON。",
   "permissions": [
